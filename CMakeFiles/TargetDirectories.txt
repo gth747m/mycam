@@ -1,0 +1,3 @@
+/home/brelder/code/cpp/mycam/CMakeFiles/mycam.dir
+/home/brelder/code/cpp/mycam/CMakeFiles/edit_cache.dir
+/home/brelder/code/cpp/mycam/CMakeFiles/rebuild_cache.dir

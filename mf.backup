@@ -1,0 +1,21 @@
+PROGRAM=mycam
+
+COMPILER=g++
+COMPILE_FLAGS=`pkg-config --cflags libcamera`
+LINKER_FLAGS=`pkg-config --libs libcamera`
+
+SRC=main.cpp
+
+OBJ=${SRC:.cpp=.o}
+
+${PROGRAM}: ${OBJ}
+	${COMPILER} ${LINKER_FLAGS} $^ -o $@
+
+main.o: main.cpp
+	${COMPILER} ${COMPILE_FLAGS} $^ -c -o $@
+
+clean:
+	rm ${OBJ}
+
+neat:
+	rm ${PROGRAM} ${OBJ}
