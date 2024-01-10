@@ -2,35 +2,8 @@
 
 #include <iomanip>
 
-static void request_complete_handler(libcamera::Request *request)
-{
-    if (request->status() == libcamera::Request::RequestCancelled)
-    {
-        std::cerr << "Request Cancelled." << std::endl;
-        return;
-    }
-    const std::map<const libcamera::Stream *, libcamera::FrameBuffer *> &buffers = request->buffers();
-    for (std::pair<const libcamera::Stream *, libcamera::FrameBuffer *> bufferPair : buffers)
-    {
-        libcamera::FrameBuffer *buffer = bufferPair.second;
-        const libcamera::FrameMetadata &metadata = buffer->metadata();
-        std::cout << " seq: " << std::setw(6) << std::setfill('0') 
-            << metadata.sequence << " bytesused: ";
-        unsigned int nplane = 0;
-        for (const libcamera::FrameMetadata::Plane &plane : metadata.planes())
-        {
-            std::cout << plane.bytesused;
-            if (++nplane < metadata.planes().size())
-            {
-                std::cout << "/";
-            }
-            std::cout << std::endl;
-        }
-    }
-}
-
 Camera::Camera(std::shared_ptr<libcamera::Camera> camera)
-    : m_camera(camera)
+    : m_camera(camera), m_semaphore(1)
 {
     std::cout << "Acquiring camera." << std::endl;
     m_camera->acquire();
@@ -59,12 +32,53 @@ void Camera::request_frames()
     generate_requests();
     std::cout << "Starting camera." << std::endl;
     m_camera->start();
-    m_camera->requestCompleted.connect(request_complete_handler);
+    m_camera->requestCompleted.connect(this, &Camera::request_complete_handler);
+    // Acquire semaphore
+    m_semaphore.acquire();
     std::cout << "Queueing requests." << std::endl;
     for (std::unique_ptr<libcamera::Request> &request : m_requests)
     {
         m_camera->queueRequest(request.get());
         m_queued_requests++;
+    }
+    if (m_queued_requests > 0)
+    {
+        // block until all queued requests have been completed
+        m_semaphore.acquire();
+    }
+    // release semaphore to allow more requests
+    m_semaphore.release();
+}
+
+void Camera::request_complete_handler(libcamera::Request *request)
+{
+    if (request->status() == libcamera::Request::RequestCancelled)
+    {
+        std::cerr << "Request Cancelled." << std::endl;
+        return;
+    }
+    const std::map<const libcamera::Stream *, libcamera::FrameBuffer *> &buffers = request->buffers();
+    for (std::pair<const libcamera::Stream *, libcamera::FrameBuffer *> bufferPair : buffers)
+    {
+        libcamera::FrameBuffer *buffer = bufferPair.second;
+        const libcamera::FrameMetadata &metadata = buffer->metadata();
+        std::cout << " seq: " << std::setw(6) << std::setfill('0') 
+            << metadata.sequence << " bytesused: ";
+        unsigned int nplane = 0;
+        for (const libcamera::FrameMetadata::Plane &plane : metadata.planes())
+        {
+            std::cout << plane.bytesused;
+            if (++nplane < metadata.planes().size())
+            {
+                std::cout << "/";
+            }
+            std::cout << std::endl;
+        }
+    }
+    m_queued_requests--;
+    if (m_queued_requests <= 0)
+    {
+        m_semaphore.release();
     }
 }
 
