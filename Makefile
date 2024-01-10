@@ -129,6 +129,54 @@ mycam/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/build
 .PHONY : mycam/fast
 
+camera.o: camera.cpp.o
+.PHONY : camera.o
+
+# target to build an object file
+camera.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera.cpp.o
+.PHONY : camera.cpp.o
+
+camera.i: camera.cpp.i
+.PHONY : camera.i
+
+# target to preprocess a source file
+camera.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera.cpp.i
+.PHONY : camera.cpp.i
+
+camera.s: camera.cpp.s
+.PHONY : camera.s
+
+# target to generate assembly for a file
+camera.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera.cpp.s
+.PHONY : camera.cpp.s
+
+camera_manager.o: camera_manager.cpp.o
+.PHONY : camera_manager.o
+
+# target to build an object file
+camera_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera_manager.cpp.o
+.PHONY : camera_manager.cpp.o
+
+camera_manager.i: camera_manager.cpp.i
+.PHONY : camera_manager.i
+
+# target to preprocess a source file
+camera_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera_manager.cpp.i
+.PHONY : camera_manager.cpp.i
+
+camera_manager.s: camera_manager.cpp.s
+.PHONY : camera_manager.s
+
+# target to generate assembly for a file
+camera_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mycam.dir/build.make CMakeFiles/mycam.dir/camera_manager.cpp.s
+.PHONY : camera_manager.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -162,6 +210,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... mycam"
+	@echo "... camera.o"
+	@echo "... camera.i"
+	@echo "... camera.s"
+	@echo "... camera_manager.o"
+	@echo "... camera_manager.i"
+	@echo "... camera_manager.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

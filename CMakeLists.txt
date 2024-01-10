@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.25.0)
 project(mycam)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_FLAGS "-ggdb")
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} 
+    main.cpp
+    camera.hpp
+    camera.cpp
+    camera_manager.hpp
+    camera_manager.cpp
+    )
 
 find_package(Boost REQUIRED)
 
