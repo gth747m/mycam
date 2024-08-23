@@ -4,7 +4,8 @@
 #include <atomic>
 #include <iostream>
 #include <memory>
-#include <semaphore>
+#include <mutex>
+#include <string>
 #include <vector>
 // libcamera
 #include <libcamera/libcamera.h>
@@ -23,7 +24,8 @@ private:
     std::unique_ptr<libcamera::FrameBufferAllocator> m_allocator;
     std::vector<std::unique_ptr<libcamera::Request>> m_requests;
     std::atomic_int m_queued_requests;
-    std::binary_semaphore m_semaphore;
+    std::mutex m_mutex;
     void allocate_frame_buffers();
     void generate_requests();
+    void save_jpeg(const uint8_t *data, int width, int height, const std::string &filename);
 };
